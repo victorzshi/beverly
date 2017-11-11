@@ -7,7 +7,7 @@ var geocode = require('../helpers/geocode.js');
 * @param {string} term What you're searching for
 * @param {number} desired_count Number of tweets you want
 * @param {number} max_reqs Maximum number of requests to make, if we don't get desired_count tweets first
-* @returns {array}
+* @returns {object}
 */
 module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, context, callback) => {
 
@@ -29,11 +29,12 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
 
   console.log("started");
   let tweet_data = [];
+  let all_tweets = [];
   let last_id;
 
   let process_tweet = async (tweets, n, done) => {
+    t = tweets.statuses[n];
     if (tweet_data.length < desired_count) {
-      t = tweets.statuses[n];
       if (t.id < last_id || last_id == -1) {
         last_id = t.id;
       }
@@ -52,22 +53,22 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
         write = true;
       } else if (t.user != null && t.user.location != null) {
         loc = t.user.location;
-        data.source = "profile";
         coords = await geocode(loc);
         if (coords != null) {
           data.lat = coords.lat;
           data.lon = coords.lon;
+          data.source = "profile";
           data.loc = loc;
           write = true;
         } else {
           write = false;
         }
       }
-      console.log(t.text);
       if (write) {
         tweet_data.push(data);
       }
     }
+    all_tweets.push(t.text);
     done();
   }
 
@@ -91,7 +92,7 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
   }
 
   async.timesSeries(max_reqs, get_more_tweets, function (err) {
-    callback(err, tweet_data);
+    callback(err, {geolocated: tweet_data, all: all_tweets});
   });
 
 };
