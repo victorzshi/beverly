@@ -1,7 +1,7 @@
 const lib = require('lib')({token: process.env.STDLIB_LIBRARY_TOKEN});
 const maps = require('@google/maps');
 
-const geocode_blacklist = ["earth", "the internet", "united states", "us", "usa"];
+const geocode_blacklist = ["", "earth", "the internet", "united states", "us", "usa"];
 
 var maps_client = maps.createClient({
   key: process.env.MAPS_ACCESS_TOKEN
@@ -52,7 +52,7 @@ function geocode_api_req(name) {
   return new Promise(resolve => {
     maps_client.geocode({address: name}, (err, response) => {
       if (err) {
-        throw err;
+        throw new Error(err);
       }
       resp_obj = response.json;
       //console.log(resp_obj);
