@@ -5,6 +5,7 @@
   "author": "lberkley <lincoln.berkley@gmail.com>",
   "main": "functions/__main__.js",
   "dependencies": {
+    "@google/maps": "^0.4.5",
     "async": "^2.6.0",
     "lib": "^3.0.1",
     "twitter": "^1.7.1"
