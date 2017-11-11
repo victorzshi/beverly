@@ -1,15 +1,6 @@
 # bvrly
 
-Web visualizer that queries tweets through Twitter API and sends them through Microsoft Azure Sentiment Analysis API and displays inside a Vue.js web app with Google Maps API. Also may display some other data using libraries like Wolfram Alpha, Chart.js.
-
-Developed for HackPrinceton 2017
-
-# Members:
-
-Andrew McCann
-Justin Koh
-Linc Berkley
-Victor Shi
+> A Vue.js project
 
 ## Build Setup
 
