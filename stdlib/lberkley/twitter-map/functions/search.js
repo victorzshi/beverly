@@ -25,7 +25,7 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
 
   req_obj = {
     q: term,
-    geocode: "40,-75,1000mi",
+    geocode: "39,-95.5,1600mi",
     count: 100,
     result_type: "recent"
   }
