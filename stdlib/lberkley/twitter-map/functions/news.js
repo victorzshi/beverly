@@ -20,11 +20,6 @@ module.exports = (searchTerm = "HackPrinceton", callback) => {
           body += d;
       });
       response.on('end', function () {
-          console.log('\nRelevant Headers:\n');
-          for (var header in response.headers)
-              // header keys are lower-cased by Node.js
-              if (header.startsWith("bingapis-") || header.startsWith("x-msedge-"))
-                   console.log(header + ": " + response.headers[header]);
           body = JSON.parse(body);
           callback(null, body.value);
       });
@@ -38,7 +33,7 @@ module.exports = (searchTerm = "HackPrinceton", callback) => {
     let request_params = {
           method : 'GET',
           hostname : host,
-          path : path + '?q=' + encodeURIComponent(search) + '&freshness=month',
+          path : path + '?q=' + encodeURIComponent(search) + '&count=50' + '&freshness=month',
           headers : {
               'Ocp-Apim-Subscription-Key' : subscriptionKey,
           }

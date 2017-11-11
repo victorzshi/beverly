@@ -12,7 +12,7 @@ let path = '/text/analytics/v2.0/sentiment'
 * @param {number} max_reqs Maximum number of requests to make, if we don't get desired_count tweets first
 * @returns {object}
 */
-module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, context, callback) => {
+module.exports = (term = "HackPrinceton", desired_count = 100, max_reqs = 1, context, callback) => {
   var accessKey = process.env.AZURE_ACCESS_KEY;
 
   // handle response data from Azure
@@ -23,15 +23,9 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
       });
       response.on ('end', function () {
           let body_ = JSON.parse (body);
-          for (docidx in body_.documents) {
-            let doc = body_.documents[docidx];
-            doc.text = tweets[docidx].text;
-            doc.lat = tweets[docidx].lat;
-            doc.lon = tweets[docidx].lon;
-          }
           let body__ = JSON.stringify (body_, null, '  ');
           return body_;
-          callback(null, body_);
+          //callback(null, body_);
       });
       response.on ('error', function (e) {
           console.log ('Error: ' + e.message);
@@ -52,7 +46,7 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
       };
 
       let req = https.request (request_params, (response) => {
-        response_handler(response);
+        return response_handler(response);
       });
       req.write (body);
       req.end ();
@@ -63,18 +57,19 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
     let tweetData = {'documents': []};
     for (tidx in tweets) {
       tweet = {
-        text:tweet.text,
+        text: tweets[tidx].text,
         language: 'en',
         id: tidx
       };
       analyze = {
-        text: tweet.text,
+        text: tweets[tidx].text,
         language: 'en',
         id: tidx
       };
-      tweetData.documents.push(tweetData);
+      tweetData.documents.push(tweet);
       analyzeData.documents.push(analyze);
     }
-    analuyzeData = get_sentiments(analyzeData);
+    analyzed = get_sentiments(analyzeData);
+    allTweets = get_sentiments(tweetData);
   });
 }
