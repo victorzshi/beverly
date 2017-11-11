@@ -1,0 +1,21 @@
+{
+  "name": "twitter-map",
+  "version": "0.0.0",
+  "description": "",
+  "author": "lberkley <lincoln.berkley@gmail.com>",
+  "main": "functions/__main__.js",
+  "dependencies": {
+    "twitter": "^1.7.1"
+  },
+  "private": true,
+  "stdlib": {
+    "build": "faaslang",
+    "name": "lberkley/twitter-map",
+    "timeout": 10000,
+    "publish": true,
+    "personalize": {
+      "keys": [],
+      "user": []
+    }
+  }
+}
