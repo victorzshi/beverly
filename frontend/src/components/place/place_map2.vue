@@ -40,210 +40,12 @@ export default {
     return {
       map: null,
       heatmap: null,
-      // trafficLayer: null,
-      // transitLayer: null,
-      // bikeLayer: null
     };
   },
   methods: {
     initMap: function() {
-      // this.location = this.coords;
-      //location is default Toronto
-      this.location = { lat: 43.70011, lng: -79.4163 };
-      // Initialize Google Map
-      this.map = new google.maps.Map(document.getElementById('map'), {
-        //set center to be the location (Toronto)
-        center: this.location,
-        mapTypeControl: false,
-        //fullscreen?
-        fullscreenControl: false,
-        // Higher zoom means closer view
-        zoom:    5,
-        //disable street view
-        streetViewControl: false,
-
-        // Styling for the Google Map, can be changed as necessary
-        styles: [
-          {
-            "featureType": "administrative",
-            "elementType": "all",
-            "stylers": [
-              {
-                // "visibility": "off"
-                "visibility": "on"
-              }
-            ]
-          },
-          {
-            "featureType": "landscape",
-            "elementType": "all",
-            "stylers": [
-              {
-                "visibility": "simplified"
-              },
-              {
-                "hue": "#0066ff"
-              },
-              {
-                "saturation": 74
-              },
-              {
-                "lightness": 100
-              }
-            ]
-          },
-          {
-            "featureType": "poi",
-            "elementType": "labels.icon",
-            "stylers": [
-              {
-                "visibility": "off"
-              }
-            ]
-          },
-          {
-            "featureType": "road",
-            "elementType": "all",
-            "stylers": [
-              {
-                // "visibility": "simplified"
-                "visibility": "on"
-              }
-            ]
-          },
-          {
-            "featureType": "road.highway",
-            "elementType": "all",
-            "stylers": [
-              {
-                "visibility": "off"
-              },
-              {
-                "weight": 0.6
-              },
-              {
-                "saturation": -85
-              },
-              {
-                "lightness": 61
-              }
-            ]
-          },
-          {
-            "featureType": "road.highway",
-            "elementType": "geometry",
-            "stylers": [
-              {
-                "visibility": "on"
-              }
-            ]
-          },
-          {
-            "featureType": "road.arterial",
-            "elementType": "all",
-            "stylers": [
-              {
-                // "visibility": "simplified"
-                "visibility": "on"
-              }
-            ]
-          },
-          {
-            "featureType": "road.local",
-            "elementType": "all",
-            "stylers": [
-              {
-                // "visibility": "simplified"
-                "visibility": "on"
-              }
-            ]
-          },
-          {
-            "featureType": "transit",
-            "elementType": "all",
-            "stylers": [
-              {
-                // "visibility": "simplified"
-                "visibility": "on"
-              }
-            ]
-          },
-          {
-            "featureType": "water",
-            "elementType": "all",
-            "stylers": [
-              {
-                "visibility": "simplified"
-              },
-              {
-                "color": "#5f94ff"
-              },
-              {
-                "lightness": 26
-              },
-              {
-                "gamma": 5.86
-              }
-            ]
-          }
-        ]
-      });
-      // Drop main marker on map
-      var mainMarker = new google.maps.Marker({
-        position: this.location,
-        map: this.map,
-        animation: google.maps.Animation.DROP
-      });
-      //initialize
-	  this.heatmap = new google.maps.visualization.HeatmapLayer({
-        data: getPoints(),
-        map: map
-      });    
-    },
-    toggleHeatmap: function() {
-  	  this.heatmap.setMap(this.heatmap.getMap() ? null : this.map);
-  	}
-  },
-
-  watch: {
-    coords: function (new_coords) {
-      if (new_coords.lat != null && new_coords.lng != null) {
-        this.initMap();
-      }
-    },
-  	changeGradient: function () {
-      var gradient = [
-        // Bulma grey (white smoke)
-        'rgba(245, 245, 245, 0)',
-        'rgba(245, 245, 245, 0.5)', 
-
-        // Bulma is-primary green 
-        'rgba(0, 196, 167, 0.2)',
-        'rgba(0, 196, 167, 0.2)',
-        'rgba(0, 196, 167, 0.2)',
-
-        // Bulma is-success green
-        'rgba(34, 198, 91, 0.4)',
-        'rgba(34, 198, 91, 0.4)',
-        'rgba(34, 198, 91, 0.6)',
-        'rgba(34, 198, 91, 0.6)',
-        'rgba(34, 198, 91, 0.8)',
-        'rgba(34, 198, 91, 0.8)',
-        'rgba(34, 198, 91, 0.9)',
-        'rgba(34, 198, 91, 0.9)',
-        'rgba(34, 198, 91, 1)',
-        'rgba(34, 198, 91, 1)',
-      ];
-      this.heatmap.set('gradient', gradient);
-    },
-  	changeRadius: function() {
-  		this.heatmap.set('radius', 40);
-  	},
-
-  	//500 points
-  	getPoints: function() {
-    	return [
-          new google.maps.LatLng(37.782551, -122.445368),
+    var heatMapData = [
+		  new google.maps.LatLng(37.782551, -122.445368),
           new google.maps.LatLng(37.782745, -122.444586),
           new google.maps.LatLng(37.782842, -122.443688),
           new google.maps.LatLng(37.782919, -122.442815),
@@ -743,8 +545,200 @@ export default {
           new google.maps.LatLng(37.753837, -122.403172),
           new google.maps.LatLng(37.752986, -122.403112),
           new google.maps.LatLng(37.751266, -122.403355)
-      	  ];
-      	},
+	];
+      // this.location = this.coords;
+      //location is default San Fran
+      this.location = { lat: 37.774546, lng: -122.433523 };
+      // Initialize Google Map
+      this.map = new google.maps.Map(document.getElementById('map'), {
+        //set center to be the location 
+        center: this.location,
+        mapTypeControl: false,
+        //fullscreen?
+        fullscreenControl: false,
+        // Higher zoom means closer view
+        zoom: 13,
+        //disable street view
+        streetViewControl: false,
+
+        // Styling for the Google Map, can be changed as necessary
+        styles: [
+          {
+            "featureType": "administrative",
+            "elementType": "all",
+            "stylers": [
+              {
+                // "visibility": "off"
+                "visibility": "on"
+              }
+            ]
+          },
+          {
+            "featureType": "landscape",
+            "elementType": "all",
+            "stylers": [
+              {
+                "visibility": "simplified"
+              },
+              {
+                "hue": "#0066ff"
+              },
+              {
+                "saturation": 74
+              },
+              {
+                "lightness": 100
+              }
+            ]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "labels.icon",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "elementType": "all",
+            "stylers": [
+              {
+                // "visibility": "simplified"
+                "visibility": "on"
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "all",
+            "stylers": [
+              {
+                "visibility": "off"
+              },
+              {
+                "weight": 0.6
+              },
+              {
+                "saturation": -85
+              },
+              {
+                "lightness": 61
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "visibility": "on"
+              }
+            ]
+          },
+          {
+            "featureType": "road.arterial",
+            "elementType": "all",
+            "stylers": [
+              {
+                // "visibility": "simplified"
+                "visibility": "on"
+              }
+            ]
+          },
+          {
+            "featureType": "road.local",
+            "elementType": "all",
+            "stylers": [
+              {
+                // "visibility": "simplified"
+                "visibility": "on"
+              }
+            ]
+          },
+          {
+            "featureType": "transit",
+            "elementType": "all",
+            "stylers": [
+              {
+                // "visibility": "simplified"
+                "visibility": "on"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "all",
+            "stylers": [
+              {
+                "visibility": "simplified"
+              },
+              {
+                "color": "#5f94ff"
+              },
+              {
+                "lightness": 26
+              },
+              {
+                "gamma": 5.86
+              }
+            ]
+          }
+        ]
+      });
+      // Drop main marker on map
+      var mainMarker = new google.maps.Marker({
+        position: this.location,
+        map: this.map,
+        animation: google.maps.Animation.DROP
+      });
+      //initialize
+	  this.heatmap = new google.maps.visualization.HeatmapLayer({
+        data: heatMapData,
+        map: map
+      });    
+    },
+    toggleHeatmap: function() {
+  	  this.heatmap.setMap(this.heatmap.getMap() ? null: this.map);
+  	}
+
+  },
+
+  watch: {
+    coords: function (new_coords) {
+      if (new_coords.lat != null && new_coords.lng != null) {
+        this.initMap();
+      }
+    },
+  	changeGradient: function () {
+      var gradient = [
+        // Bulma grey (white smoke)
+        'rgba(245, 245, 245, 0)',
+        'rgba(245, 245, 245, 0.5)', 
+
+        // Bulma is-primary green 
+        'rgba(0, 196, 167, 0.2)',
+        'rgba(0, 196, 167, 0.2)',
+        'rgba(0, 196, 167, 0.2)',
+
+        // Bulma is-success green
+        'rgba(34, 198, 91, 0.4)',
+        'rgba(34, 198, 91, 0.4)',
+        'rgba(34, 198, 91, 0.6)',
+        'rgba(34, 198, 91, 0.6)',
+        'rgba(34, 198, 91, 0.8)',
+        'rgba(34, 198, 91, 0.8)',
+        'rgba(34, 198, 91, 0.9)',
+        'rgba(34, 198, 91, 0.9)',
+        'rgba(34, 198, 91, 1)',
+        'rgba(34, 198, 91, 1)',
+      ];
+      this.heatmap.set('gradient', gradient);
+    },
+  	changeRadius: function() {
+  		this.heatmap.set('radius', 40);
+  	},
 	}
 }
 </script>
