@@ -1,13 +1,10 @@
 let async = require('async');
 let https = require ('https');
 
-let uri = 'eastus.api.cognitive.microsoft.com';
-let path = '/text/analytics/v2.0/sentiment'
-
 /**
 * Searches Bing News API for related aritcles
 * @param {string} searchTerm What you're searching for
-* @returns {object}
+* @returns {array}
 */
 module.exports = (searchTerm = "HackPrinceton", callback) => {
 
@@ -29,10 +26,7 @@ module.exports = (searchTerm = "HackPrinceton", callback) => {
               if (header.startsWith("bingapis-") || header.startsWith("x-msedge-"))
                    console.log(header + ": " + response.headers[header]);
           body = JSON.parse(body);
-          callback(null, body);
-          // console.log('\nJSON Response:\n');
-          // console.log(body);
-
+          callback(null, body.value);
       });
       response.on('error', function (e) {
           console.log('Error: ' + e.message);
@@ -44,7 +38,7 @@ module.exports = (searchTerm = "HackPrinceton", callback) => {
     let request_params = {
           method : 'GET',
           hostname : host,
-          path : path + '?q=' + encodeURIComponent(search),
+          path : path + '?q=' + encodeURIComponent(search) + '&freshness=month',
           headers : {
               'Ocp-Apim-Subscription-Key' : subscriptionKey,
           }
