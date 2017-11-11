@@ -7,9 +7,9 @@
         <a class="button" v-on:click="toggleHeatmap()">Toggle Heatmap</a>
       </div>
 
-    <div class="field">
+    <!-- <div class="field"> -->
       <!-- Show/hide other filters -->
-      <a class="button" v-on:click="toggleFilters()">Toggle Filters</a>
+      <!-- <a class="button" v-on:click="toggleFilters()">Toggle Filters</a>
       <a id="trafficIcon" class="button filter no-display" v-on:click="toggleTraffic()">
         <span class="icon">
           <i class="fa fa-car"></i>
@@ -29,9 +29,9 @@
         <span class="icon">
           <i class="fa fa-ban"></i>
         </span>
-      </a>
+      </a> -->
 
-    </div>
+    <!-- </div> -->
   </div>
   <div id="map"></div>
 </div>
@@ -69,36 +69,36 @@ export default {
     toggleHeatmap: function() {
       this.heatmap.setMap(this.heatmap.getMap() ? null : this.map);
     },
-    toggleFilters: function() {
-      var filters = document.getElementsByClassName("filter");
-      for (var i = 0; i < filters.length; i++) {
-        filters[i].classList.toggle('no-display');
-      }
-    },
-    toggleLayerClear: function() {
-      this.trafficLayer.setMap(null);
-      this.transitLayer.setMap(null);
-      this.bikeLayer.setMap(null);
-      var filters = document.getElementsByClassName("filter");
-      for (var i = 0; i < filters.length; i++) {
-        filters[i].classList.remove('is-active');
-      }
-    },
-    toggleTraffic: function () {
-      this.toggleLayerClear();
-      this.trafficLayer.setMap(this.trafficLayer.getMap() ? null : this.map);
-      document.getElementById('trafficIcon').classList.add('is-active');
-    },
-    toggleTransit: function () {
-      this.toggleLayerClear();
-      this.transitLayer.setMap(this.transitLayer.getMap() ? null : this.map);
-      document.getElementById('transitIcon').classList.add('is-active');
-    },
-    toggleBicycle: function () {
-      this.toggleLayerClear();
-      this.bikeLayer.setMap(this.bikeLayer.getMap() ? null : this.map);
-      document.getElementById('bicycleIcon').classList.add('is-active');
-    }, 
+    // toggleFilters: function() {
+    //   var filters = document.getElementsByClassName("filter");
+    //   for (var i = 0; i < filters.length; i++) {
+    //     filters[i].classList.toggle('no-display');
+    //   }
+    // },
+    // toggleLayerClear: function() {
+    //   this.trafficLayer.setMap(null);
+    //   this.transitLayer.setMap(null);
+    //   this.bikeLayer.setMap(null);
+    //   var filters = document.getElementsByClassName("filter");
+    //   for (var i = 0; i < filters.length; i++) {
+    //     filters[i].classList.remove('is-active');
+    //   }
+    // },
+    // toggleTraffic: function () {
+    //   this.toggleLayerClear();
+    //   this.trafficLayer.setMap(this.trafficLayer.getMap() ? null : this.map);
+    //   document.getElementById('trafficIcon').classList.add('is-active');
+    // },
+    // toggleTransit: function () {
+    //   this.toggleLayerClear();
+    //   this.transitLayer.setMap(this.transitLayer.getMap() ? null : this.map);
+    //   document.getElementById('transitIcon').classList.add('is-active');
+    // },
+    // toggleBicycle: function () {
+    //   this.toggleLayerClear();
+    //   this.bikeLayer.setMap(this.bikeLayer.getMap() ? null : this.map);
+    //   document.getElementById('bicycleIcon').classList.add('is-active');
+    // }, 
     initMap: function() {
       this.location = this.coords;
       // Initialize Google Map
@@ -106,9 +106,14 @@ export default {
         center: this.location,
         mapTypeControl: false,
         // Higher zoom means closer view
-        maxZoom: 16,
-        zoom:    14,
-        minZoom: 12,
+        // maxZoom: 16,
+        zoom:    5,
+        // minZoom: 12,
+        //disable street view
+        streetViewControl: false,
+
+        //disable UI
+        // disableDefaultUI: true,
         // Styling for the Google Map, can be changed as necessary
         styles: [
           {
@@ -238,6 +243,11 @@ export default {
       // Drop main marker on map
       var mainMarker = new google.maps.Marker({
         position: this.location,
+        map: this.map,
+        animation: google.maps.Animation.DROP
+      });
+      var randomMarkers = new google.maps.Marker({
+        position: 
         map: this.map,
         animation: google.maps.Animation.DROP
       });
