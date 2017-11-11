@@ -1,13 +1,15 @@
-# capacity-frontend
+# bvrly
 
-> The vue-js front-end to our 2212 project, Capacity.
+Web visualizer that queries tweets through Twitter API and sends them through Microsoft Azure Sentiment Analysis API and displays inside a Vue.js web app with Google Maps API. Also may display some other data using libraries like Wolfram Alpha, Chart.js.
 
-Indentation is 2-spaces.
+Developed for HackPrinceton 2017
 
-If you're using Sublimetext with packagecontrol, you can install the VueJS complete package.
-Other text editors probably have similar addons.
+# Members:
 
-We're using bulma for our front-end CSS library.
+Andrew McCann
+Justin Koh
+Linc Berkley
+Victor Shi
 
 ## Build Setup
 
@@ -34,4 +36,4 @@ npm run e2e
 npm test
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
