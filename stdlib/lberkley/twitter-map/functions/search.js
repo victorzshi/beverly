@@ -1,16 +1,13 @@
 var Twitter = require('twitter');
 var async = require('async');
-let https = require ('https');
-
-let uri = 'eastus.api.cognitive.microsoft.com';
-let path = '/text/analytics/v2.0/sentiment'
+var geocode = require('../helpers/geocode.js');
 
 /**
 * Searches Twitter for a given term
 * @param {string} term What you're searching for
 * @param {number} desired_count Number of tweets you want
 * @param {number} max_reqs Maximum number of requests to make, if we don't get desired_count tweets first
-* @returns {array}
+* @returns {object}
 */
 module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, context, callback) => {
 
@@ -31,7 +28,49 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
   }
 
   console.log("started");
-  tweet_data = [];
+  let tweet_data = [];
+  let all_tweets = [];
+  let last_id;
+
+  let process_tweet = async (tweets, n, done) => {
+    t = tweets.statuses[n];
+    if (tweet_data.length < desired_count) {
+      if (t.id < last_id || last_id == -1) {
+        last_id = t.id;
+      }
+      let write = false;
+      data = {text: t.text};
+      if (t.coordinates != null) {
+        data.lat = t.coordinates.coordinates[1];
+        data.lon = t.coordinates.coordinates[0];
+        data.source = "coordinates";
+        write = true;
+      } else if (t.place != null) {
+        box = t.place.bounding_box.coordinates[0]
+        data.lat = (box[1][1] + box[2][1]) / 2
+        data.lon = (box[0][0] + box[1][0]) / 2
+        data.source = "place";
+        write = true;
+      } else if (t.user != null && t.user.location != null) {
+        loc = t.user.location;
+        coords = await geocode(loc);
+        if (coords != null) {
+          data.lat = coords.lat;
+          data.lon = coords.lon;
+          data.source = "profile";
+          data.loc = loc;
+          write = true;
+        } else {
+          write = false;
+        }
+      }
+      if (write) {
+        tweet_data.push(data);
+      }
+    }
+    all_tweets.push(t.text);
+    done();
+  }
 
   let get_more_tweets = (n, done) => {
     if (tweet_data.length >= desired_count) done(null);
@@ -40,37 +79,20 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
       if (error) {
         console.log("Error: " + JSON.stringify(error));
       }
-      for (tidx in tweets.statuses) {
-        if (tweet_data.length < desired_count) {
-          t = tweets.statuses[tidx];
-          if (t.id < last_id || last_id == -1) {
-            last_id = t.id;
-          }
-          if (t.coordinates != null || t.place != null) {
-            data = {text: t.text};
-            if (t.coordinates != null) {
-              data.lat = t.coordinates.coordinates[0];
-              data.lon = t.coordinates.coordinates[1];
-              data.source = "coordinates";
-            } else {
-              box = t.place.bounding_box.coordinates[0]
-              data.lat = (box[0][0] + box[1][0]) / 2
-              data.lon = (box[1][1] + box[2][1]) / 2
-              data.source = "place";
-            }
-            tweet_data.push(data);
-          }
-        } else {
-          break;
+      async.timesSeries(tweets.statuses.length, (n, done) => {
+        process_tweet(tweets, n, done);
+      }, (err) => {
+        if (err) {
+          console.log(err);
         }
-      }
-      req_obj.max_id = last_id - 1;
-      done();
+        req_obj.max_id = last_id - 1;
+        done();
+      });
     });
   }
 
   async.timesSeries(max_reqs, get_more_tweets, function (err) {
-    callback(err, tweet_data);
+    callback(err, {geolocated: tweet_data, all: all_tweets});
   });
 
 };
