@@ -3,7 +3,7 @@
 <template lang="html">
 <div>
 
-<navbar></navbar>
+<!-- <navbar></navbar> -->
 <div id="placepage" class="section container">
   <div class="columns">
     <!-- <div class="column">
@@ -29,6 +29,9 @@
       </div> -->
    
     </div>
+          <div class="card">
+        <wordcloud></wordcloud>
+      </div>
     <!-- <div class="column">
       <place_recommend :recommendations="recommended" v-on:goToPlace="goToPlace"></place_recommend>
     </div> -->
@@ -52,6 +55,7 @@ import place_recommend from '../components/place/place_recommend.vue'
 import place_messages from '../components/place/place_messages.vue'
 import place_graph from '../components/place/place_graph.vue'
 import place_info from '../components/place/place_info.vue'
+import wordcloud from '../components/place/wordcloud.vue'
 
 export default {
   name: 'place',
@@ -61,7 +65,8 @@ export default {
     place_recommend,
     place_messages,
     place_graph,
-    place_info
+    place_info,
+    wordcloud
   },
   data: function () {
     return {
