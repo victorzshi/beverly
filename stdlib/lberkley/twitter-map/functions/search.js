@@ -1,9 +1,5 @@
 var Twitter = require('twitter');
 var async = require('async');
-let https = require ('https');
-
-let uri = 'eastus.api.cognitive.microsoft.com';
-let path = '/text/analytics/v2.0/sentiment'
 
 /**
 * Searches Twitter for a given term
@@ -49,13 +45,13 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
           if (t.coordinates != null || t.place != null) {
             data = {text: t.text};
             if (t.coordinates != null) {
-              data.lat = t.coordinates.coordinates[0];
-              data.lon = t.coordinates.coordinates[1];
+              data.lat = t.coordinates.coordinates[1];
+              data.lon = t.coordinates.coordinates[0];
               data.source = "coordinates";
             } else {
               box = t.place.bounding_box.coordinates[0]
-              data.lat = (box[0][0] + box[1][0]) / 2
-              data.lon = (box[1][1] + box[2][1]) / 2
+              data.lat = (box[1][1] + box[2][1]) / 2
+              data.lon = (box[0][0] + box[1][0]) / 2
               data.source = "place";
             }
             tweet_data.push(data);
