@@ -7,7 +7,7 @@ let path = '/text/analytics/v2.0/sentiment';
 /**
 * Searches Twitter for a given term
 * @param {string} term What you're searching for
-* @returns {string}
+* @returns {object}
 */
 module.exports = (term = "HackPrinceton", context, callback) => {
 
@@ -71,8 +71,7 @@ module.exports = (term = "HackPrinceton", context, callback) => {
       response.on ('end', function () {
           let body_ = JSON.parse (body);
           let body__ = JSON.stringify (body_, null, '  ');
-          console.log (body__);
-          callback(null, body__);
+          callback(null, body_);
       });
       response.on ('error', function (e) {
           console.log ('Error: ' + e.message);
