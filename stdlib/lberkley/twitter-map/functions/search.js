@@ -10,7 +10,7 @@ let path = '/text/analytics/v2.0/sentiment'
 * @param {string} term What you're searching for
 * @param {number} desired_count Number of tweets you want
 * @param {number} max_reqs Maximum number of requests to make, if we don't get desired_count tweets first
-* @returns {object}
+* @returns {array}
 */
 module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, context, callback) => {
 
@@ -32,14 +32,14 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
 
   console.log("started");
   tweet_data = [];
-  analyzeData = {'documents': []};
 
-  get_more_tweets = (n, done) => {
+  let get_more_tweets = (n, done) => {
     if (tweet_data.length >= desired_count) done(null);
     last_id = -1;
     client.get('search/tweets', req_obj, function(error, tweets, response) {
-      console.log(error);
-      count = 0;
+      if (error) {
+        console.log("Error: " + JSON.stringify(error));
+      }
       for (tidx in tweets.statuses) {
         if (tweet_data.length < desired_count) {
           t = tweets.statuses[tidx];
@@ -48,13 +48,6 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
           }
           if (t.coordinates != null || t.place != null) {
             data = {text: t.text};
-            console.log(count);
-            analyze = {
-              text: t.text,
-              language: 'en',
-              id: count
-            };
-            analyzeData.documents.push(analyze);
             if (t.coordinates != null) {
               data.lat = t.coordinates.coordinates[0];
               data.lon = t.coordinates.coordinates[1];
@@ -70,86 +63,14 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
         } else {
           break;
         }
-        count = count + 1;
       }
       req_obj.max_id = last_id - 1;
       done();
     });
   }
 
-  // handle response data from Azure
-  let response_handler = function (response) {
-      let body = '';
-      response.on ('data', function (d) {
-          body += d;
-      });
-      response.on ('end', function () {
-          let body_ = JSON.parse (body);
-          let body__ = JSON.stringify (body_, null, '  ');
-          callback(null, body_);
-      });
-      response.on ('error', function (e) {
-          console.log ('Error: ' + e.message);
-      });
-  };
-
-  // post array to Azure cloud services
-  let get_sentiments = function (documents) {
-      let body = JSON.stringify (documents);
-
-      let request_params = {
-          method : 'POST',
-          hostname : uri,
-          path : path,
-          headers : {
-              'Ocp-Apim-Subscription-Key' : accessKey,
-          }
-      };
-
-      let req = https.request (request_params, response_handler);
-      req.write (body);
-      req.end ();
-  };
-
   async.timesSeries(max_reqs, get_more_tweets, function (err) {
-    get_sentiments(analyzeData);
-
-    //callback(err, tweet_data);
+    callback(err, tweet_data);
   });
 
-  // for (var i = 0; i < max_reqs; i++) {
-  //   client.get('search/tweets', req_obj, function(error, tweets, response) {
-  //     for (tidx in tweets.statuses) {
-  //       if (tweet_data.length < desired_count) {
-  //         t = tweets.statuses[tidx];
-  //         last_id = t.id
-  //         if (t.coordinates != null || t.place != null) {
-  //           data = {text: t.text};
-  //           if (t.coordinates != null) {
-  //             data.lat = t.coordinates.coordinates[0];
-  //             data.lon = t.coordinates.coordinates[1];
-  //             data.source = "coordinates";
-  //           } else {
-  //             box = t.place.bounding_box.coordinates[0]
-  //             data.lat = (box[0][0] + box[1][0]) / 2
-  //             data.lon = (box[1][1] + box[2][1]) / 2
-  //             data.source = "place";
-  //           }
-  //           tweet_data.push(data);
-  //         }
-  //       } else {
-  //         break;
-  //       }
-  //     }
-  //     have_resp = true;
-  //   });
-  //   console.log("waiting for response");
-  //   while (!have_resp);
-  //   console.log("did an iteration");
-  //   have_resp = false;
-  //   if (tweet_data.length >= desired_count) break;
-  //   req_obj.max_id = last_id - 1;
-  // }
-
-  // callback(null, tweet_data);
 };
