@@ -22,7 +22,7 @@ module.exports = (term = "HackPrinceton", context, callback) => {
       response.on ('end', function () {
           let body_ = JSON.parse (body);
           averageSentiment = 0;
-          for(articles in body_.documents) {
+          for(article in body_.documents) {
             averageSentiment = averageSentiment + body_.documents[article].score
           }
           body_.average = averageSentiment / body_.documents.length;
@@ -64,7 +64,6 @@ module.exports = (term = "HackPrinceton", context, callback) => {
       count = count + 1;
       newsData.documents.push(analyze);
     }
-
     get_sentiments(newsData);
   });
 }

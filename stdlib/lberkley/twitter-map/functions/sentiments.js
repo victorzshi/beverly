@@ -16,16 +16,29 @@ module.exports = (term = "HackPrinceton", desired_count = 100, max_reqs = 1, con
   var accessKey = process.env.AZURE_ACCESS_KEY;
 
   // handle response data from Azure
-  let response_handler = function (response) {
+  let response_handler = function (response, tweets) {
       let body = '';
       response.on ('data', function (d) {
           body += d;
       });
       response.on ('end', function () {
           let body_ = JSON.parse (body);
-          let body__ = JSON.stringify (body_, null, '  ');
-          return body_;
-          //callback(null, body_);
+          averageSentiment = 0;
+          body_.located = [];
+          for(article in body_.documents) {
+            averageSentiment = averageSentiment + body_.documents[article].score
+            if(tweets[article]) {
+              lat = tweets[article].lat;
+              lon = tweets[article].lon;
+              body_.located.push({
+                lat: lat,
+                lon: lon,
+                score: body_.documents[article].score
+              })
+            }
+          }
+          body_.average = averageSentiment / body_.documents.length;
+          callback(null, body_);
       });
       response.on ('error', function (e) {
           console.log ('Error: ' + e.message);
@@ -33,7 +46,7 @@ module.exports = (term = "HackPrinceton", desired_count = 100, max_reqs = 1, con
   };
 
   // post array to Azure cloud services
-  let get_sentiments = function (documents) {
+  let get_sentiments = function (documents, tweets) {
       let body = JSON.stringify (documents);
 
       let request_params = {
@@ -46,7 +59,7 @@ module.exports = (term = "HackPrinceton", desired_count = 100, max_reqs = 1, con
       };
 
       let req = https.request (request_params, (response) => {
-        return response_handler(response);
+        response_handler(response, tweets);
       });
       req.write (body);
       req.end ();
@@ -54,22 +67,26 @@ module.exports = (term = "HackPrinceton", desired_count = 100, max_reqs = 1, con
 
   return lib[`${context.service.identifier}.search`](term, desired_count, max_reqs, (err, tweets) => {
     let analyzeData = {'documents': []};
-    let tweetData = {'documents': []};
-    for (tidx in tweets) {
-      tweet = {
-        text: tweets[tidx].text,
-        language: 'en',
-        id: tidx
-      };
+    let geoData = {'documents': []};
+    console.log(tweets);
+    for (tidx in ((tweets && tweets.all) || [])) {
       analyze = {
-        text: tweets[tidx].text,
+        text: tweets.all[tidx],
         language: 'en',
         id: tidx
       };
-      tweetData.documents.push(tweet);
       analyzeData.documents.push(analyze);
     }
-    analyzed = get_sentiments(analyzeData);
-    allTweets = get_sentiments(tweetData);
+    for (tidx in ((tweets && tweets.geolocated) || [])) {
+      geocode = {
+        text: tweets.geolocated[tidx],
+        language: 'en',
+        id: tidx,
+        lat: tweets.geolocated[tidx].lat,
+        lon: tweets.geolocated[tidx].lon
+      };
+      geoData.documents.push(analyze);
+    }
+    get_sentiments(analyzeData, tweets.geolocated);
   });
 }
