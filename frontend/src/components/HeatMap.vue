@@ -3,7 +3,7 @@
     <h1 class="title">Sentiment Map</h1>
     <!-- <span>Display child prop-passed statusMessage: {{ statusMessage }}</span> -->
     <div id="map">
-      <img id="loading-image" src="http://i.giftrunk.com/44frgm.gif">
+      <img id="loading-image" src="https://data.whicdn.com/images/58681812/original.gif">
     </div>
   </div>
 </template>
@@ -13,11 +13,11 @@
   height: 400px;
   width: 100%;
   margin: 0 auto;
-  background: gray;
+  background: white;
 }
 #loading-image {
-  height: 400px;
-  width: 100%;
+  height: 150px;
+  object-fit: cover;
 }
 </style>
 

@@ -6,14 +6,16 @@
     <div class="nav-left">
 
       <a class="nav-item" href="#">
-        <h1 class="title has-text-centered is-large">BEVERLY</h1>
+        <h1 class="title has-text-centered">
+         <p class="content has-text-light">BEVERLY</p>
+       </h1>
       </a>
     </div>
 
     <!-- This "nav-toggle" hamburger menu is only visible on mobile -->
     <span class="nav-toggle" v-on:click="toggleMenu">
       <span>
-        <a class="nav-item" v-on:click="openModal('about')">
+        <a class="nav-item has-text-light" v-on:click="openModal('about')">
           About
         </a>
       </span>
@@ -24,7 +26,9 @@
     <!-- This "nav-menu" is hidden on mobile -->
     <div class="nav-right nav-menu" v-bind:class="{ 'is-active': menu_open }">
       <a class="nav-item" v-on:click="openModal('about')">
-        About
+        <p class="content has-text-light">
+          About
+        </p>
       </a>
     </div>
 
@@ -36,7 +40,7 @@
 
 <style>
 .nav {
-  background-color: #eeeeee;
+  background-color: #6666ff;
 }
 </style>
 

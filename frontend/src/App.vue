@@ -61,7 +61,7 @@ export default {
   data: function() {
     return {
       searchText: '',
-      placeholderText: 'Search something...',
+      placeholderText: 'How does the world feel about...',
       query: '',
       statusMessage: 'Nothing has happened',
       // source: ''
