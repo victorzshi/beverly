@@ -1,6 +1,7 @@
 let lib = require('lib');
 let https = require('https');
 let search = require('./search.js');
+let phrases = require('../helpers/phrases.js');
 
 let uri = 'eastus.api.cognitive.microsoft.com';
 let path = '/text/analytics/v2.0/sentiment'
@@ -16,7 +17,7 @@ module.exports = (term = "HackPrinceton", desired_count = 100, max_reqs = 1, con
   var accessKey = process.env.AZURE_ACCESS_KEY;
 
   // handle response data from Azure
-  let response_handler = function (response, tweets) {
+  let response_handler = function (response, tweets, keyPhrases) {
       let body = '';
       response.on ('data', function (d) {
           body += d;
@@ -38,6 +39,7 @@ module.exports = (term = "HackPrinceton", desired_count = 100, max_reqs = 1, con
             }
           }
           body_.average = averageSentiment / body_.documents.length;
+          body_.keyPhrases = keyPhrases;
           callback(null, body_);
       });
       response.on ('error', function (e) {
@@ -46,7 +48,7 @@ module.exports = (term = "HackPrinceton", desired_count = 100, max_reqs = 1, con
   };
 
   // post array to Azure cloud services
-  let get_sentiments = function (documents, tweets) {
+  let get_sentiments = function (documents, tweets, keyPhrases) {
       let body = JSON.stringify (documents);
 
       let request_params = {
@@ -59,7 +61,7 @@ module.exports = (term = "HackPrinceton", desired_count = 100, max_reqs = 1, con
       };
 
       let req = https.request (request_params, (response) => {
-        response_handler(response, tweets);
+        response_handler(response, tweets, keyPhrases);
       });
       req.write (body);
       req.end ();
@@ -87,6 +89,11 @@ module.exports = (term = "HackPrinceton", desired_count = 100, max_reqs = 1, con
       };
       geoData.documents.push(analyze);
     }
-    get_sentiments(analyzeData, tweets.geolocated);
+    phrases(tweets.all, 3, (err, keyPhrases) => {
+      if (err) {
+        console.log(err);
+      }
+      get_sentiments(analyzeData, tweets.geolocated, keyPhrases);
+    });
   });
 }
