@@ -51,10 +51,10 @@ export default {
 
           const element = document.getElementById('map')
           const options = {
-            zoom: 4,
+            zoom: 2,
             // San Fran (37.774546, -122.433523)
             // Center of USA 37.0902° N, 95.7129° W
-            center: new google.maps.LatLng(37.0902, -95.7129)
+            center: new google.maps.LatLng(40.00, 0.00)
           }
           this.map = new google.maps.Map(element, options);
 
