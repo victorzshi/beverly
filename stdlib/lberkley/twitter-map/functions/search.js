@@ -31,6 +31,8 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
   let tweet_data = [];
   let all_tweets = [];
   let last_id;
+  let locs = [];
+  let loc_id = 0;
 
   let process_tweet = async (tweets, n, done) => {
     t = tweets.statuses[n];
@@ -52,47 +54,65 @@ module.exports = (term = "HackPrinceton", desired_count = 10, max_reqs = 20, con
         data.source = "place";
         write = true;
       } else if (t.user != null && t.user.location != null) {
-        loc = t.user.location;
-        coords = await geocode(loc);
-        if (coords != null) {
-          data.lat = coords.lat;
-          data.lon = coords.lon;
-          data.source = "profile";
-          data.loc = loc;
-          write = true;
-        } else {
-          write = false;
-        }
+        data.loc = t.user.location;
+        data.loc_id = loc_id;
+        locs[loc_id] = t.user.location;
+        loc_id += 1;
+        data.source = "profile";
+        write = true;
       }
       if (write) {
         tweet_data.push(data);
       }
     }
     all_tweets.push(t.text);
-    done();
+    return done();
   }
 
   let get_more_tweets = (n, done) => {
-    if (tweet_data.length >= desired_count) done(null);
+    if (tweet_data.length >= desired_count) return done(null);
     last_id = -1;
     client.get('search/tweets', req_obj, function(error, tweets, response) {
       if (error) {
         console.log("Error: " + JSON.stringify(error));
       }
-      async.timesSeries(tweets.statuses.length, (n, done) => {
-        process_tweet(tweets, n, done);
+      async.timesSeries(tweets.statuses.length, (n, p_done) => {
+        process_tweet(tweets, n, p_done);
       }, (err) => {
         if (err) {
           console.log(err);
         }
         req_obj.max_id = last_id - 1;
-        done();
+        return done();
       });
     });
   }
 
   async.timesSeries(max_reqs, get_more_tweets, function (err) {
-    callback(err, {geolocated: tweet_data, all: all_tweets});
+    async.map(locs, (loc, callback) => {
+      geocode(loc).then(result => { callback(null, result); }).catch(err => { console.log(err); });
+    }, function (err, loc_coords) {
+      if (err) {
+        console.log(err);
+      }
+      console.log(loc_coords);
+
+      tweet_data_final = [];
+      for (tidx in tweet_data) {
+        t = tweet_data[tidx];
+        if (t.source == "profile") {
+          let coord = loc_coords[t.loc_id];
+          if (coord != null) {
+            t.lat = coord.lat;
+            t.lon = coord.lon;
+            tweet_data_final.push(t);
+          }
+        } else {
+          tweet_data_final.push(t);
+        }
+      }
+      callback(err, {geolocated: tweet_data_final, all: all_tweets});
+    })
   });
 
 };
