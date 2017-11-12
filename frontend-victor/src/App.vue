@@ -27,42 +27,125 @@
       </div>
     </div>
     <!-- Import Vue components -->
-    <h1 class="title">First widget</h1>
-    <HelloWorld/>
-    <h1 class="title">Second widget</h1>
-    <HelloWorld2/>
+    <HeatMap v-bind:map-center="mapCenter" v-bind:message="message"></HeatMap>
+
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld'
-import HelloWorld2 from './components/HelloWorld2'
+import HeatMap from './components/HeatMap'
 
 export default {
   name: 'app',
-  props: {
-    searchText: {
-      type: String,
-      default: ''
-    },
-    placeholderText: {
-      type: String,
-      default: 'Search something...'
-    },
-    statusMessage: {
-      type: String,
-      default: 'Status'
+  data: function() {
+    return {
+      searchText: '',
+      placeholderText: 'Search something...',
+      statusMessage: 'Status',
+      // Temporary san fran
+      mapCenter: {
+        // lat: 51.501527,
+        lat: 37.774546,
+        // lng: -0.1921837
+        lng: -122.433523
+      },
+      message: 'test message'
     }
   },
   components: {
     HelloWorld,
-    HelloWorld2
+    // HelloWorld2
+    HeatMap
   },
   methods: {
     submitText: function () {
       this.statusMessage = 'Submitted: ' + this.searchText
-    }
-  }
+    },
+    // updatePlace: function() {
+    //   this.place_id = this.$route.params.id
+
+    //   console.log('place id: ' + this.place_id)
+
+    //   // Calls google maps for place getDetails
+    //   this.gmaps.getDetails({ placeId: this.place_id }, (data, status) => {
+    //     console.log(status)
+
+    //     if (status == google.maps.places.PlacesServiceStatus.OK) {
+    //       console.log(data)
+    //       this.name = data.name
+    //       this.address = data.formatted_address
+    //       // this.type = data.types[0]
+    //       // this.rating = data.rating
+    //       const lat = data.geometry.location.lat()
+    //       const lng = data.geometry.location.lng()
+
+    //       this.coords = {
+    //         lat: lat,
+    //         lng: lng
+    //       }
+
+    //       // get suggested places
+    //       this.gmaps.nearbySearch({
+    //           location: this.coords,
+    //           type: this.type,
+    //           radius: 5000,
+    //           // openNow: true,
+    //           rankBy: google.maps.places.RankBy.PROMINENCE
+    //         }, (data, status) => {
+    //           console.log('NOTICE')
+    //           console.log(data)
+    //           this.nearby = data
+    //         let suggested = []
+    //         if (status == google.maps.places.PlacesServiceStatus.OK) {
+    //           suggested = data.filter(place => {
+    //             return this.place_id != place.place_id
+    //           })
+    //           this.recommended = suggested
+    //           console.log(suggested)
+    //         } 
+    //         else {
+    //           suggested = []
+    //           this.recommended = suggested
+    //         }
+
+    //         let placeList = []
+    //         let compcontext = this
+
+    //         let findCAP = function (places) {
+    //           console.log(places.length)
+
+    //           if (places.length <= 0) {
+    //             compcontext.heatPlaces = placeList
+    //             console.log(compcontext.heatPlaces)
+    //             return
+    //           }
+    //           api.getPlace(compcontext, places[0].place_id, result => {
+    //             placeList.push(result)
+    //             findCAP(places.slice(1))
+    //           })
+    //         }
+
+    //         console.log('NOTICE')
+    //         console.log(data)
+    //         findCAP(data)
+    //       })  
+    //     } else {
+    //       alert('error fetching place info')
+    //     }
+    //   })    
+
+    //   // Calls backend for data
+    //   api.getPlace(this, this.place_id, result => {
+    //     console.log(result)
+    //     this.graph_data = result.body.heatMap
+    //   })
+    // },
+  },
+  created: function () {
+    // this.gmaps = new google.maps.places.PlacesService(document.createElement('div'))
+    // this.updatePlace()
+  },
 }
 </script>
 

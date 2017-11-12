@@ -34,7 +34,7 @@
 
 <script>
 export default {
-  name: 'place_map',
+  name: 'justin_map',
   props: ['coords', 'heatPlaces', 'recommended'],
   data: function () {
     return {
@@ -45,7 +45,7 @@ export default {
   methods: {
     initMap: function() {
     var heatMapData = [
-		new google.maps.LatLng(37.782551, -122.445368),
+    new google.maps.LatLng(37.782551, -122.445368),
           new google.maps.LatLng(37.782745, -122.444586),
           new google.maps.LatLng(37.782842, -122.443688),
           new google.maps.LatLng(37.782919, -122.442815),
@@ -545,7 +545,7 @@ export default {
           new google.maps.LatLng(37.753837, -122.403172),
           new google.maps.LatLng(37.752986, -122.403112),
           new google.maps.LatLng(37.751266, -122.403355)
-	];
+  ];
       // this.location = this.coords;
       //location is default San Fran
       this.location = { lat: 37.774546, lng: -122.433523 };
@@ -694,14 +694,14 @@ export default {
         animation: google.maps.Animation.DROP
       });
       //initialize
-	  this.heatmap = new google.maps.visualization.HeatmapLayer({
+    this.heatmap = new google.maps.visualization.HeatmapLayer({
         data: heatMapData,
         map: map
       });    
     },
     toggleHeatmap: function() {
-  	  this.heatmap.setMap(this.heatmap.getMap() ? null: this.map);
-  	}
+      this.heatmap.setMap(this.heatmap.getMap() ? null: this.map);
+    }
 
   },
 
@@ -711,7 +711,7 @@ export default {
         this.initMap();
       }
     },
-  	changeGradient: function () {
+    changeGradient: function () {
       var gradient = [
         // Bulma grey (white smoke)
         'rgba(245, 245, 245, 0)',
@@ -736,9 +736,9 @@ export default {
       ];
       this.heatmap.set('gradient', gradient);
     },
-  	changeRadius: function() {
-  		this.heatmap.set('radius', 40);
-  	},
-	}
+    changeRadius: function() {
+      this.heatmap.set('radius', 40);
+    },
+  }
 }
 </script>
