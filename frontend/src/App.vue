@@ -1,12 +1,9 @@
 <template>
   <div id="app">
+    <Navbar></Navbar>
     <!-- Import logo image -->
     <div class="container">
       <img src="./assets/logo.png">
-    </div>
-    <!-- Some display text -->
-    <div class="container">
-      <h1 class="title has-text-centered">Welcome to BVRLY</h1>
     </div>
     <!-- Search bar -->
     <div class="container">
@@ -21,14 +18,19 @@
           </span>
         </div>
 
-        <!-- Testing -->
-        <p>{{ statusMessage }}</p>
-
       </div>
     </div>
     <!-- Import Vue components -->
-    <!-- v-bind:heat-map-data="heatMapData" -->
-    <HeatMap v-bind:query="query" v-bind:status-message="statusMessage"></HeatMap>
+    <div class="container">
+      <div class="columns">
+        <div class="column is-half">
+          <HeatMap v-bind:query="query" v-bind:status-message="statusMessage"></HeatMap>
+        </div>
+        <div class="column is-half">
+          <Newslist v-bind:query="query"></Newslist>
+        </div>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -40,7 +42,6 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
 
@@ -51,8 +52,9 @@ Justin don't touch anything below this
  -->
 
 <script>
-import HelloWorld from './components/HelloWorld'
 import HeatMap from './components/HeatMap'
+import Newslist from './components/Newslist'
+import Navbar from './components/Navbar'
 
 export default {
   name: 'app',
@@ -61,12 +63,14 @@ export default {
       searchText: '',
       placeholderText: 'Search something...',
       query: '',
-      statusMessage: 'Nothing has happened'
+      statusMessage: 'Nothing has happened',
+      // source: ''
     }
   },
   components: {
-    HelloWorld,
-    HeatMap
+    HeatMap,
+    Newslist,
+    Navbar
   },
   methods: {
     submitText: function () {

@@ -2,4 +2,7 @@ build/*.js
 config/*.js
 src/*.js
 src/*.vue
-src/components/HeatMap.vue
+src/components/*.vue
+src/components/Newslist.vue
+src/components/Navbar.vue
+src/components/SourceSelection.vue
