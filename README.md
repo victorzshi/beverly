@@ -8,37 +8,77 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+First we need the stdlib CLI. This can be installed by:
 
 ```
-Give examples
+$ npm install lib.cli -g
 ```
 
-### Installing
-
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
+Clone the git repository and navigate to new directory:
 
 ```
-Give the example
+$ git clone https://github.com/VictoryShoe/hackprinceton-app.git
+$ cd hackprinceton-app
 ```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
+You will need your own API keys if you want to run any of the backend functionality. These can be placed in
+an environment variables file in ./stdlib/lberkley/twitter-map/env.json. The structure of env.json would be as follows:
 
 ```
-until finished
+{
+  "local": {
+    "TWITTER_CONSUMER_KEY": "your key",
+    "TWITTER_CONSUMER_SECRET": "your key",
+    "TWITTER_ACCESS_TOKEN_KEY": "your key",
+    "TWITTER_ACCESS_TOKEN_SECRET": "your key",
+    "AZURE_ACCESS_KEY": "your key",
+    "AZURE_ACCESS_KEY_NEWS": "your key",
+    "STDLIB_LIBRARY_TOKEN": "your key",
+    "MAPS_ACCESS_TOKEN": "your key"
+  },
+  "dev": {
+    "TWITTER_CONSUMER_KEY": "your key",
+    "TWITTER_CONSUMER_SECRET": "your key9",
+    "TWITTER_ACCESS_TOKEN_KEY": "your key",
+    "TWITTER_ACCESS_TOKEN_SECRET": "your key",
+    "AZURE_ACCESS_KEY": "your key",
+    "AZURE_ACCESS_KEY_NEWS": "your key",
+    "STDLIB_LIBRARY_TOKEN": "your key",
+    "MAPS_ACCESS_TOKEN": "your key"
+  },
+  "release": {
+    "key": "value"
+  }
+}
 ```
+In the same folder, install node modules:
+
+```
+$ npm install
+```
+
+
+## Running Beverly
+
+To run Beverly, open two terminals. In the first:
+
+```
+$ cd frontend/project
+$ npm install
+
+# serve with hot reload at localhost:8080
+$ npm run dev
+```
+
+In the second:
+
+```
+$ cd stdlib/lberkley/twtter-map
+
+# serve with hot reload at localhost:8170
+$ lib up dev
+```
+
+You should be able to navigate to localhost:8000 and run Beverly... :)
 
 ## Built With
 
