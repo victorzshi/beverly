@@ -14,7 +14,7 @@
         <div id="search-bar" class="control has-icon has-icon-right">
           <input class="input is-large" type="text"
             v-model="searchText"
-            v-on:keyup.enter="submitText"  
+            v-on:keyup.enter="submitText"
             v-bind:placeholder="placeholderText">
           <span class="icon is-small">
             <i id="search-icon" class="fa fa-search"></i>
@@ -565,6 +565,29 @@ export default {
 
       // ]
     }*/
+  },
+  getTwitterHeatMapData: function (term) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        // var sentiments_data_str = '{"documents": [], "errors": [], "located": [], "average": 0.5, "keyPhrases": {}}';
+        var sentiment_data = JSON.parse(xmlhttp.responseText);
+        var positiveHeatMap = [];
+        var negativeHeatMap = [];
+        for (i in located) {
+          var point = located[i];
+          var latlng = new google.maps.LatLng(point.lat, point.lon);
+          if (point.score < 0.5) {
+            negativeHeatMap.push(new google.maps.WeightedLocation(latlng, (0.5 - point.score) * 2));
+          } else {
+            positiveHeatMap.push(new google.maps.WeightedLocation(latlng, (point.score - 0.5) * 2));
+          }
+        }
+        this.heatMapData = positiveHeatMap;
+      }
+    }
+    xmlhttp.open('GET', 'https://lberkley.lib.id/twitter-map@dev/sentiments/?term=' + term + '&desired_count=100', true);
+    xmlhttp.send();
   },
   created: function () {
     // getHeatMapData()
