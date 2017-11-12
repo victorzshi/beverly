@@ -28,10 +28,27 @@
     </div>
     <!-- Import Vue components -->
     <!-- v-bind:heat-map-data="heatMapData" -->
-    <HeatMap v-bind:map-center="mapCenter" v-bind:heatmap-data="heatmapData" v-bind:message="message"></HeatMap>
+    <HeatMap v-bind:map-center="mapCenter" v-bind:heat-map-data="heatMapData" v-bind:status-message="statusMessage"></HeatMap>
 
   </div>
 </template>
+
+<style>
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>
+
+<!-- 
+
+Justin don't touch anything below this
+
+ -->
 
 <script>
 import HelloWorld from './components/HelloWorld'
@@ -49,16 +66,27 @@ export default {
         lng: -122.433523
       },
       message: 'test message',
-      heatmapData: null
+      heatMapData: []
     }
   },
+  // data: {
+  //   searchText: '',
+  //   placeholderText: 'Search something...',
+  //   statusMessage: 'Status',
+  //   mapCenter: {
+  //     lat: 37.774546,
+  //     lng: -122.433523
+  //   },
+  //   message: 'test message',
+  //   heatMapData: []
+  // },
   components: {
     HelloWorld,
     HeatMap
   },
   methods: {
     submitText: function () {
-      this.statusMessage = 'Submitted: ' + this.searchText
+      this.statusMessage = this.searchText
     },
 /*    getHeatMapData: function () {
       // this.heatMapData = [
@@ -565,43 +593,39 @@ export default {
 
       // ]
     }*/
-  },
-  getTwitterHeatMapData: function (term) {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        // var sentiments_data_str = '{"documents": [], "errors": [], "located": [], "average": 0.5, "keyPhrases": {}}';
-        var sentiment_data = JSON.parse(xmlhttp.responseText);
-        var positiveHeatMap = [];
-        var negativeHeatMap = [];
-        for (i in located) {
-          var point = located[i];
-          var latlng = new google.maps.LatLng(point.lat, point.lon);
-          if (point.score < 0.5) {
-            negativeHeatMap.push(new google.maps.WeightedLocation(latlng, (0.5 - point.score) * 2));
-          } else {
-            positiveHeatMap.push(new google.maps.WeightedLocation(latlng, (point.score - 0.5) * 2));
+  // },
+    getTwitterHeatMapData: function (term) {
+      console.log("Retrieving data")
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // var sentiments_data_str = '{"documents": [], "errors": [], "located": [], "average": 0.5, "keyPhrases": {}}';
+          var sentiment_data = JSON.parse(xmlhttp.responseText);
+          var positiveHeatMap = [];
+          var negativeHeatMap = [];
+          for (let i in sentiment_data.located) {
+            var point = sentiment_data.located[i];
+            var latlng = new google.maps.LatLng(point.lat, point.lon);
+            console.log(latlng)
+            // if (point.score < 0.5) {
+            //   negativeHeatMap.push({location: latlng, weight: (0.5 - point.score) * 2});
+            // } else {
+            //   positiveHeatMap.push({location: latlng, weight: (point.score - 0.5) * 2});
+            // }
+            positiveHeatMap.push(latlng)
           }
+          this.heatMapData = positiveHeatMap;
+          console.log("Twitter heat map data finish retrieving")
+          this.statusMessage = 'OK'
+          console.log(this.statusMessage)
         }
-        this.heatMapData = positiveHeatMap;
       }
+      xmlhttp.open('GET', 'https://lberkley.lib.id/twitter-map@dev/sentiments/?term=' + term + '&desired_count=100', true);
+      xmlhttp.send();
     }
-    xmlhttp.open('GET', 'https://lberkley.lib.id/twitter-map@dev/sentiments/?term=' + term + '&desired_count=100', true);
-    xmlhttp.send();
   },
   created: function () {
-    // getHeatMapData()
+    this.getTwitterHeatMapData('iPhone');
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
