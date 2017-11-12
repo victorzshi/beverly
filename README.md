@@ -1,4 +1,3 @@
-# Beverly
 ![Beverly](./src/logo.png?raw=true "Beverly")
 
 Beverly is a dynamic, real-time sentiment analysis tool that links the Twitter world's emotions with current events. Any keyword can be analyzed and visualized upon a map of the United States to gain insight into how the population is feeling.
