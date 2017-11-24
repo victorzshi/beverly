@@ -1,7 +1,7 @@
 <template>
-  <div class="section container">
+  <!-- <div class="container"> -->
 
-    <h1 class="title">Article List</h1>
+    
 
     <div class="container">
       <!-- <a class="media" v-for="article in articles"> -->
@@ -21,7 +21,7 @@
       </a>
     </div>
 
-  </div>
+  <!-- </div> -->
 </template>
 <script>
 export default {

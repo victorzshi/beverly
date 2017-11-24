@@ -27,6 +27,7 @@
           <HeatMap v-bind:query="query" v-bind:status-message="statusMessage"></HeatMap>
         </div>
         <div class="column is-half">
+          <h1 class="section title">Article List</h1>
           <Newslist v-bind:query="query"></Newslist>
         </div>
       </div>
