@@ -96,7 +96,7 @@ You should be able to navigate to localhost:8000 and run Beverly... :)
 * **Andrew McCann** - *Back-end development and ideation*
 * **Justin Koh** - *Front-end development and design*
 * **Lincoln Berkley** - *Back-end development and API hacker*
-* **Victor Shi** - *Front-end development and middleware connection*
+* **Victor Zhuoyue Shi** - *Front-end development and middleware connection*
 
 ## Acknowledgments
 
