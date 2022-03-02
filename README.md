@@ -2,6 +2,8 @@
 
 Beverly is a dynamic, real-time sentiment analysis tool that links the Twitter world's emotions with current events. Any keyword can be analyzed and visualized upon a map of the United States to gain insight into how the population is feeling.
 
+Developed for [HackPrinceton Fall 2017](https://hackprinceton-fall17.devpost.com/).
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
@@ -90,8 +92,6 @@ You should be able to navigate to localhost:8000 and run Beverly... :)
 * [Bulma](https://bulma.io/) - CSS styling framework
 
 ## Authors
-
-Developed for [HackPrinceton Fall 2017](https://hackprinceton-fall17.devpost.com/) by:
 
 * **Andrew McCann** - *Back-end development and ideation*
 * **Justin Koh** - *Front-end development and design*
